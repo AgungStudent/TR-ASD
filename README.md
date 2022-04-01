@@ -1,6 +1,6 @@
 # TR-ASD
 tugas deadline ***13 April 2022 pukul 23.59 WIB***  
-file format `TR_ASD F 672021077_672021210.txt`  
+file format `TR_ASD F_672021077_672021210.txt`  
 Nama kelompok cantumkan di komentar program
 ## Wajib ada:
 1. sorting
