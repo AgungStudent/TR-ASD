@@ -22,6 +22,7 @@ menu_t *head = NULL, *db_record;
 
 const char KATEGORI[3][15] = {"Makanan", "Minuman", "Snack"};
 const char SPACE[] = "                                            ";
+int count_list;
 
 // PROTOTYPE
 // desaign
@@ -33,14 +34,15 @@ void readData();
 void updateData();
 void deleteData();
 void formCrud(menu_t *ptr);
+void searchData();
 // Database
 void dbToLinked();
 void updateDB();
 // table
 void line(int ascii1, int ascii2, int ascii3);
-void tabel();
+void tabel(menu_t *list);
 // sorting
-void sort(char sort_mode[], char field[]);
+void sort(menu_t **head_sort, char sort_mode[], char field[]);
 
 int main() {
   int pilihan;
@@ -78,23 +80,29 @@ void menuCrud() {
   while (1) {
     system("cls");
     system("color F1");
-    // puts("========================================================================================================================");
-    // "****************************************************************************"
-    printf("                       "
-           "*******************************************************************"
-           "*********\n");
+    Sleep(70);
+    printf("                       ****************************************************************************\n");
     gotoxy(45, 1);
+    Sleep(70);
     printf("CREATE, READ, UPDATE, DELETE\n");
     gotoxy(53, 2);
+    Sleep(70);
     printf("MENU RESOTORAN\n");
-    printf("                       "
-           "*******************************************************************"
-           "*********\n\n");
+    Sleep(70);
+    printf("                       ****************************************************************************\n\n");
+    Sleep(70);
     printf("%sMenu 1. untuk tambah menu resotran\n", SPACE);
+    Sleep(70);
     printf("%sMenu 2. untuk edit menu resotran\n", SPACE);
+    Sleep(70);
     printf("%sMenu 3. untuk delete menu resotran\n", SPACE);
-    printf("%sMenu 4. uetak melihat menu resotran\n", SPACE);
-    printf("%sMenu 5. untuk keluar \n\n", SPACE);
+    Sleep(70);
+    printf("%sMenu 4. untak melihat menu resotran\n", SPACE);
+    Sleep(70);
+    printf("%sMenu 5. untuk search menu restoran\n", SPACE);
+    Sleep(70);
+    printf("%sMenu 6. untuk keluar \n\n", SPACE);
+    Sleep(70);
     printf("%sPilihan: ", SPACE);
     fflush(stdin);
     scanf("%d", &pilihan);
@@ -107,7 +115,7 @@ void menuCrud() {
     }
 
     dbToLinked();
-
+    sort(&head, "asc", "nama");
     if (pilihan == 1) {
       system("cls");
       createData();
@@ -124,6 +132,9 @@ void menuCrud() {
       system("cls");
       readData();
     } else if (pilihan == 5) {
+      system("cls");
+      searchData();
+    } else if (pilihan == 6) {
       free(head);
       return;
     } else {
@@ -137,14 +148,10 @@ void menuCrud() {
 void createData() {
   menu_t *ptr, *temp;
   ptr = (menu_t *)malloc(sizeof(menu_t));
-  printf("                       "
-         "*******************************************************************"
-         "*********\n");
-  gotoxy(46, 1);
+  printf("                       ****************************************************************************\n");
+  gotoxy(48, 1);
   printf("**CREATE MENU RESOTRAN**\n");
-  printf("                       "
-         "*******************************************************************"
-         "*********\n\n");
+  printf("                       ****************************************************************************\n\n");
   formCrud(ptr);
   srand(time(NULL));
   int kode = rand();
@@ -168,21 +175,16 @@ void updateData() {
   int diskon, harga, search_kode, pilihan;
   ptr = (menu_t *)malloc(sizeof(menu_t));
 
-  printf("                       "
-         "*******************************************************************"
-         "*********\n");
-  gotoxy(46, 1);
+  printf("                       ****************************************************************************\n");
+  gotoxy(48, 1);
   printf("**UPDATE MENU RESOTRAN**\n");
-  printf("                       "
-         "*******************************************************************"
-         "*********\n\n");
+  printf("                       ****************************************************************************\n\n");
   if (head == NULL) {
     system("color F4");
     printf("%sData masih kosong!", SPACE);
     return;
   }
-  tabel();
-  // fflush(stdin);
+  tabel(head);
   printf("\n\n%sMasukkan kode menu yang akan dirubah: ", SPACE);
   scanf("%d", &search_kode);
 
@@ -201,14 +203,10 @@ void updateData() {
   printf("%sData tidak ditemukkan", SPACE);
 }
 void deleteData() {
-  printf("                       "
-         "*******************************************************************"
-         "*********\n");
-  gotoxy(46, 1);
+  printf("                       ****************************************************************************\n");
+  gotoxy(48, 1);
   printf("**DELETE MENU RESOTRAN**\n");
-  printf("                       "
-         "*******************************************************************"
-         "*********\n\n");
+  printf("                       ****************************************************************************\n\n");
   if (head == NULL) {
     system("color F4");
     printf("%sData masih kosong!", SPACE);
@@ -216,14 +214,13 @@ void deleteData() {
   }
   menu_t *temp = head;
   int search_kode;
-  tabel();
+  tabel(head);
   printf("\n%sMasukkan kode yang ingin dihapus: ", SPACE);
   scanf("%d", &search_kode);
   int get_data = 0;
   while (temp) {
-    if (temp->kode == search_kode) {
+    if (temp->kode == search_kode)
       break;
-    }
     get_data++;
     temp = temp->next;
   }
@@ -236,9 +233,8 @@ void deleteData() {
     printf("%sData berhasil dihapus!", SPACE);
     return;
   }
-  for (int i = 0; temp && i < get_data - 1; i++) {
+  for (int i = 0; temp && i < get_data - 1; i++)
     temp = temp->next;
-  }
 
   if (temp == NULL || temp->next == NULL) {
     system("color F4");
@@ -253,6 +249,10 @@ void deleteData() {
 }
 void readData() {
   int pilihan;
+  printf("                       ****************************************************************************\n");
+  gotoxy(48, 1);
+  printf("**SORTING MENU RESOTRAN**\n");
+  printf("                       ****************************************************************************\n\n");
   char mode_sort[5], field[7];
   printf("%sPilih metode sorting:\n", SPACE);
   printf("%s1. Ascending\n", SPACE);
@@ -281,22 +281,62 @@ void readData() {
   scanf("%d", &pilihan);
 
   if (pilihan == 1)
-    sort(mode_sort, "kode");
+    sort(&head, mode_sort, "kode");
   else if (pilihan == 2)
-    sort(mode_sort, "nama");
+    sort(&head, mode_sort, "nama");
   else if (pilihan == 3)
-    sort(mode_sort, "harga");
+    sort(&head, mode_sort, "harga");
   else if (pilihan == 4)
-    sort(mode_sort, "kategori");
+    sort(&head, mode_sort, "kategori");
   else if (pilihan == 5)
-    sort(mode_sort, "diskon");
+    sort(&head, mode_sort, "diskon");
   else {
     system("color F4");
     printf("%sPilihan salah", SPACE);
     return;
   }
 
-  tabel();
+  system("cls");
+  printf("                       ****************************************************************************\n");
+  gotoxy(48, 1);
+  printf("**READ MENU RESOTRAN**\n");
+  printf("                       ****************************************************************************\n\n");
+  tabel(head);
+}
+
+void searchData() {
+  printf("                       ****************************************************************************\n");
+  gotoxy(46, 1);
+  printf("**SEARCH MENU RESOTRAN**\n");
+  printf("                       ****************************************************************************\n\n");
+  if (!head) {
+    printf("data masih kosong!");
+    return;
+  }
+  menu_t *head_search = NULL, *ptr = head;
+  char search[36];
+  int found = 0;
+  printf("%smasukkan (nama/kategori): ", SPACE);
+  fflush(stdin);
+  scanf("%35[^\n]", search);
+  while (ptr) {
+    if (strcmpi(ptr->name, search) == 0 ||
+        strcmpi(ptr->kategori, search) == 0) {
+      found = 1;
+      db_record = (menu_t *)malloc(sizeof(menu_t));
+      db_record = ptr;
+      db_record->next = head_search;
+      head_search = db_record;
+    }
+    ptr = ptr->next;
+  }
+  if (found)
+    tabel(head_search);
+  else {
+    system("color F4");
+    printf("\n%s  Data tidak ditemukkan!", SPACE);
+  }
+  free(head_search);
 }
 
 void formCrud(menu_t *ptr) {
@@ -320,7 +360,7 @@ kategori:
     system("color F4");
     printf("%sKategori tidak ditemukkan!\n", SPACE);
     getch();
-    system("color F7");
+    system("color F1");
     goto kategori;
   }
   strcpy(kategori, KATEGORI[pilihan - 1]);
@@ -333,7 +373,7 @@ diskon:
     system("color F4");
     printf("%sDiskon tidak valid!\n", SPACE);
     getch();
-    system("color F7");
+    system("color F1");
     goto diskon;
   }
   // harga
@@ -362,8 +402,6 @@ void updateDB() {
     ptr = ptr->next;
   }
   fclose(fp);
-  // free(head);
-  // free(ptr);
   remove("db.txt");
   rename("db_new.txt", "db.txt");
 }
@@ -374,6 +412,9 @@ void dbToLinked() {
   if ((read_file = fopen("db.txt", "r")) == NULL) {
     return;
   }
+  fseek(read_file, 0, SEEK_END);
+  count_list = ftell(read_file) / sizeof(menu_t);
+  fseek(read_file, 0, SEEK_SET);
   db_record = (menu_t *)malloc(sizeof(menu_t));
   while (fread(db_record, sizeof(menu_t), 1, read_file)) {
     db_record->next = head;
@@ -384,9 +425,9 @@ void dbToLinked() {
 }
 
 // cetak tabel data
-void tabel() {
-  menu_t *curr = head;
-  if (head == NULL) {
+void tabel(menu_t *list) {
+  menu_t *curr = list;
+  if (list = NULL) {
     system("color F4");
     printf("%sData masih kosong", SPACE);
     return;
@@ -437,13 +478,14 @@ void line(int ascii1, int ascii2, int ascii3) {
   }
   printf("%c", ascii3);
 }
-void sort(char sort_mode[], char field[]) {
-  menu_t *h = head;
-  while (h) {
-    int do_swap = 0;
-    menu_t *prev = NULL, *curr = head, *next = curr->next;
+void sort(menu_t **head_sort, char sort_mode[], char field[]) {
+  int do_swap, sorted, i, j;
+  for (i = 0; i <= count_list; i++) {
+    menu_t **h = head_sort;
+    sorted = 1;
 
-    while (next) {
+    for (j = 0; j < count_list - 1; j++) {
+      menu_t *curr = *h, *next = curr->next;
       // tentukkan asc/desc
       if (strcmpi(sort_mode, "asc") == 0) {
         if (strcmpi(field, "kode") == 0)
@@ -474,18 +516,15 @@ void sort(char sort_mode[], char field[]) {
       }
 
       if (do_swap) {
-        curr->next = next->next;
+        menu_t *temp = next->next;
         next->next = curr;
-        if (prev)
-          prev->next = next;
-        else
-          head = next;
+        curr->next = temp;
+        *h = next;
+        sorted = 0;
       }
-      prev = curr;
-      curr = next;
-      next = next->next;
+      h = &(*h)->next;
     }
-    h = h->next;
+    if (sorted)
+      break;
   }
-  puts("");
 }
