@@ -29,6 +29,7 @@ int count_list;
 void gotoxy(int x, int y);
 // login
 void password_hash(char pass[]);
+void login();
 // BAGIAN CRUD
 void menuCrud();
 void createData();
@@ -49,13 +50,13 @@ void sort(menu_t **head_sort, char sort_mode[], char field[]);
 int main() {
   system("color 60 ");
 
-  printf("\n\n\n\n\n\t\t\  Nungguin yaaa ...\n");
-  printf("\n\t\t ");
+  printf("\n\n\n\n\n\t\t\t\t    Nungguin yaaa ...\n");
+  printf("\n\t\t\t\t    ");
   for (int loading = 0; loading <= 50; loading++) {
     printf("%c", 219);
     Sleep(80);
     if (loading == 50) {
-      printf("\n\n\t\t\t\t\t\t Sabar sayang!");
+      printf("\n\n\t\t\t\t\t\t\t\t          Sabar sayang!");
       getch();
     }
   }
@@ -65,7 +66,7 @@ int main() {
   for (;;) {
     system("cls && color 6");
     Sleep(70);
-    printf("\n\t\t\t   "
+    printf("\n\n\n\t\t\t   "
            "+========================================================+\n");
     Sleep(70);
     printf("\t\t\t   ||          MENU UTAMA RESTORAN 4 SEHAT 5 SEKARAT       "
@@ -85,77 +86,13 @@ int main() {
     if (choose == 1) {
       // TUGAS KIREY
     } else if (choose == 2) {
-      break;
+      login();
     } else if (choose == 3) {
       exit(0);
     } else {
       printf("%s Pilihan Salah", SPACE);
     }
     getch();
-  }
-
-  // login
-  int error = 0;
-  for (;;) {
-
-    system("cls && color 80");
-    int kolom = 60;
-    int space = 30;
-
-    for (int i = 0; i < kolom; i++) {
-
-      // 4+i => dimulai dari kolom ke 4, 2 => artinya dimulai dari baris ke 2
-      // Atas
-      gotoxy(space + i, 2);
-      printf("=");
-
-      // Bawah
-      gotoxy(kolom + space - i, 12);
-      printf("=");
-      Sleep(30);
-    }
-    for (int i = 0; i < 9; i++) {
-      gotoxy(kolom + space, 3 + i);
-      printf("|");
-      gotoxy(space, 11 - i);
-      printf("|");
-      Sleep(30);
-    }
-
-    char login[] = "LOGIN";
-    for (int i = 0; login[i] != '\0'; i++) {
-      gotoxy((kolom + space) / 2 + 12 + i, 1);
-      printf("%c", login[i]);
-      Sleep(30);
-    }
-    char user[9] = "admin", pass[9] = "gold";
-    char inputUsername[9], inputPassword[9];
-
-    gotoxy(space + 4, 5);
-    printf("Masukkan username : ");
-    scanf("%s", &inputUsername);
-    gotoxy(space + 4, 6);
-    printf("Masukkan password : ");
-    password_hash(inputPassword);
-    // cek username and password
-    if (strcmp(user, inputUsername) == 0 && strcmp(pass, inputPassword) == 0) {
-      // printf("Login Berhasil!");
-      // getch();
-      menuCrud();
-    } else {
-      gotoxy(space + space + 7, 14);
-      printf("ERROR!\n");
-      gotoxy(space + space + 7, 15);
-      printf("USERNAME DAN PASSWORD SALAH");
-      getch();
-      error++;
-    }
-    if (error >= 3) {
-      gotoxy(space, 17);
-      printf("MAAF ANDA MEMASUKKAN PASSWORD DAN USERNAME SALAH SEBANYAK 3x");
-      getch();
-      return 0;
-    }
   }
 }
 void gotoxy(int x, int y) {
@@ -168,15 +105,15 @@ void menuCrud() {
   int pilihan;
   while (1) {
     system("cls");
-    system("color F1");
+    system("color 3");
     Sleep(70);
-    printf("                       "
+    printf("\n\n                       "
            "*******************************************************************"
            "*********\n");
-    gotoxy(45, 1);
+    gotoxy(45, 3);
     Sleep(70);
     printf("CREATE, READ, UPDATE, DELETE\n");
-    gotoxy(53, 2);
+    gotoxy(53, 5);
     Sleep(70);
     printf("MENU RESTORAN\n");
     Sleep(70);
@@ -184,24 +121,24 @@ void menuCrud() {
            "*******************************************************************"
            "*********\n\n");
     Sleep(70);
-    printf("%sMenu 1. untuk tambah menu resotran\n", SPACE);
+    printf("%sMenu 1. Tambah Menu Restoran\n", SPACE);
     Sleep(70);
-    printf("%sMenu 2. untuk edit menu resotran\n", SPACE);
+    printf("%sMenu 2. Edit Menu Restoran\n", SPACE);
     Sleep(70);
-    printf("%sMenu 3. untuk delete menu resotran\n", SPACE);
+    printf("%sMenu 3. Hapus Menu Restoran\n", SPACE);
     Sleep(70);
-    printf("%sMenu 4. untuk melihat menu resotran\n", SPACE);
+    printf("%sMenu 4. Lihat Menu Restoran\n", SPACE);
     Sleep(70);
-    printf("%sMenu 5. untuk search menu restoran\n", SPACE);
+    printf("%sMenu 5. Search Menu Restoran\n", SPACE);
     Sleep(70);
-    printf("%sMenu 6. untuk keluar \n\n", SPACE);
+    printf("%sMenu 6. Keluar \n\n", SPACE);
     Sleep(70);
     printf("%sPilihan: ", SPACE);
     fflush(stdin);
     scanf("%d", &pilihan);
     if (getchar() != '\n') {
       fflush(stdin);
-      system("color F4");
+      system("color 04");
       printf("%sPilihan salah!", SPACE);
       getch();
       continue;
@@ -228,10 +165,16 @@ void menuCrud() {
       system("cls");
       searchData();
     } else if (pilihan == 6) {
+      char logout[] = "Sampai Jumpa Lagi :)";
+      printf("%s", SPACE);
+      for (int i = 0; logout[i] != '\0'; i++) {
+        Sleep(30);
+        printf("%c", logout[i]);
+      }
       free(head);
       return;
     } else {
-      system("color F4");
+      system("color 04");
       printf("%sPilihan salah!", SPACE);
     }
 
@@ -241,11 +184,11 @@ void menuCrud() {
 void createData() {
   menu_t *ptr, *temp;
   ptr = (menu_t *)malloc(sizeof(menu_t));
-  printf("                       "
+  printf("\n\n                       "
          "*********************************************************************"
          "*******\n");
-  gotoxy(48, 1);
-  printf("**CREATE MENU RESOTRAN**\n");
+  gotoxy(48, 3);
+  printf("**CREATE MENU RESTORAN**\n");
   printf("                       "
          "*********************************************************************"
          "*******\n\n");
@@ -263,7 +206,7 @@ void createData() {
   } else {
     head = ptr;
   }
-  system("color F2");
+  system("color 02");
   printf("\n%sBerhasil memasukkan data!", SPACE);
 }
 void updateData() {
@@ -272,16 +215,16 @@ void updateData() {
   int diskon, harga, search_kode, pilihan;
   ptr = (menu_t *)malloc(sizeof(menu_t));
 
-  printf("                       "
+  printf("\n\n                       "
          "*********************************************************************"
          "*******\n");
-  gotoxy(48, 1);
-  printf("**UPDATE MENU RESOTRAN**\n");
+  gotoxy(48, 3);
+  printf("**UPDATE MENU RESTORAN**\n");
   printf("                       "
          "*********************************************************************"
          "*******\n\n");
   if (head == NULL) {
-    system("color F4");
+    system("color 04");
     printf("%s       Data masih kosong!", SPACE);
     return;
   }
@@ -293,35 +236,35 @@ void updateData() {
   while (temp) {
     if (temp->kode == search_kode) {
       formCrud(temp);
-      system("color F2");
+      system("color 02");
       printf("%sBerhasil merubah data!", SPACE);
       // temp = ptr;
       return;
     }
     temp = temp->next;
   }
-  system("color F4");
+  system("color 04");
   printf("%sData tidak ditemukkan", SPACE);
 }
 void deleteData() {
-  printf("                       "
+  printf("\n\n                       "
          "*********************************************************************"
          "*******\n");
-  gotoxy(48, 1);
-  printf("**DELETE MENU RESOTRAN**\n");
+  gotoxy(48, 3);
+  printf("**DELETE MENU RESTORAN**\n");
   printf("                       "
          "*********************************************************************"
          "*******\n\n");
   if (head == NULL) {
-    system("color F4");
+    system("color 04");
     printf("%s       Data masih kosong!", SPACE);
     return;
   }
-  menu_t *temp = head;
   int search_kode;
   tabel(head);
   printf("\n%sMasukkan kode yang ingin dihapus: ", SPACE);
   scanf("%d", &search_kode);
+  menu_t *temp = head;
   int get_data = 0;
   while (temp) {
     if (temp->kode == search_kode)
@@ -333,37 +276,38 @@ void deleteData() {
   if (get_data == 0) {
     head = temp->next;
     free(temp);
-    remove("db.txt");
-    system("color F2");
-    printf("%sData berhasil dihapus!", SPACE);
+    // remove("db.txt");
+    system("color 02");
+    printf("%sData berhasil dihapus!!", SPACE);
     return;
   }
+  temp = head;
   for (int i = 0; temp && i < get_data - 1; i++)
     temp = temp->next;
 
   if (temp == NULL || temp->next == NULL) {
-    system("color F4");
+    system("color 04");
     printf("%sData tidak ada!", SPACE);
   } else {
     menu_t *next = temp->next->next;
     free(temp->next);
     temp->next = next;
-    system("color F2");
+    system("color 02");
     printf("%sData berhasil dihapus!", SPACE);
   }
 }
 void readData() {
   int pilihan;
-  printf("                       "
+  printf("\n\n                       "
          "*********************************************************************"
          "*******\n");
-  gotoxy(48, 1);
-  printf("**SORTING MENU RESOTRAN**\n");
+  gotoxy(48, 3);
+  printf("**SORTING MENU RESTORAN**\n");
   printf("                       "
          "*********************************************************************"
          "*******\n\n");
   if (!head) {
-    system("color F4");
+    system("color 04");
     printf("%s       Data masih kosong", SPACE);
     return;
   }
@@ -379,7 +323,7 @@ void readData() {
   else if (pilihan == 2)
     strcpy(mode_sort, "desc");
   else {
-    system("color F4");
+    system("color 04");
     printf("%sPilihan salah", SPACE);
     return;
   }
@@ -404,17 +348,17 @@ void readData() {
   else if (pilihan == 5)
     sort(&head, mode_sort, "diskon");
   else {
-    system("color F4");
+    system("color 04");
     printf("%sPilihan salah", SPACE);
     return;
   }
 
   system("cls");
-  printf("                       "
+  printf("\n\n                       "
          "*********************************************************************"
          "*******\n");
-  gotoxy(48, 1);
-  printf("**READ MENU RESOTRAN**\n");
+  gotoxy(48, 3);
+  printf("**READ MENU RESTORAN**\n");
   printf("                       "
          "*********************************************************************"
          "*******\n\n");
@@ -422,23 +366,23 @@ void readData() {
 }
 
 void searchData() {
-  printf("                       "
+  printf("\n\n                       "
          "*********************************************************************"
          "*******\n");
-  gotoxy(46, 1);
-  printf("**SEARCH MENU RESOTRAN**\n");
+  gotoxy(46, 3);
+  printf("**SEARCH MENU RESTORAN**\n");
   printf("                       "
          "*********************************************************************"
          "*******\n\n");
   if (!head) {
-    system("color F4");
+    system("color 04");
     printf("%s      data masih kosong!", SPACE);
     return;
   }
   menu_t *head_search = NULL, *ptr = head;
   char search[36];
   int found = 0;
-  printf("%smasukkan (nama/kategori): ", SPACE);
+  printf("%sMasukkan (Nama/Kategori): ", SPACE);
   fflush(stdin);
   scanf("%35[^\n]", search);
   while (ptr) {
@@ -455,7 +399,7 @@ void searchData() {
   if (found)
     tabel(head_search);
   else {
-    system("color F4");
+    system("color 04");
     printf("\n%s  Data tidak ditemukkan!", SPACE);
   }
   free(head_search);
@@ -466,7 +410,7 @@ void formCrud(menu_t *ptr) {
   int diskon, harga, pilihan;
   // name
   fflush(stdin);
-  printf("%sMasukkan Nama menu: ", SPACE);
+  printf("%sMasukkan Nama Menu: ", SPACE);
   scanf("%35[^\n]", &name);
 // kategori
 kategori:
@@ -479,10 +423,10 @@ kategori:
   printf("%sPilihan: ", SPACE);
   scanf("%d", &pilihan);
   if (pilihan > size || pilihan <= 0) {
-    system("color F4");
+    system("color 04");
     printf("%sKategori tidak ditemukkan!\n", SPACE);
     getch();
-    system("color F1");
+    system("color 03");
     goto kategori;
   }
   strcpy(kategori, KATEGORI[pilihan - 1]);
@@ -492,15 +436,15 @@ diskon:
   printf("%sMasukkan diskon menu(0-100): ", SPACE);
   scanf("%d", &diskon);
   if (diskon > 100 || diskon < 0) {
-    system("color F4");
+    system("color 04");
     printf("%sDiskon tidak valid!\n", SPACE);
     getch();
-    system("color F1");
+    system("color 03");
     goto diskon;
   }
   // harga
   fflush(stdin);
-  printf("%sMasukkan harga menu: ", SPACE);
+  printf("%sMasukkan Harga Menu: ", SPACE);
   scanf("%d", &harga);
 
   // pindahkan data ke struct
@@ -550,7 +494,7 @@ void dbToLinked() {
 void tabel(menu_t *list) {
   menu_t *curr = list;
   if (list = NULL) {
-    system("color F4");
+    system("color 04");
     printf("%s       Data masih kosong", SPACE);
     return;
   }
@@ -677,4 +621,70 @@ void password_hash(char pass[]) {
     }
   } while (key != 13);
   pass[index] = '\0';
+}
+void login() {
+  // login
+  int error = 0;
+  for (;;) {
+
+    system("cls && color 30");
+    int kolom = 60;
+    int space = 30;
+
+    for (int i = 0; i < kolom; i++) {
+
+      // 4+i => dimulai dari kolom ke 4, 2 => artinya dimulai dari baris ke 2
+      // Atas
+      gotoxy(space + i, 2);
+      printf("=");
+
+      // Bawah
+      gotoxy(kolom + space - i, 12);
+      printf("=");
+      Sleep(30);
+    }
+    for (int i = 0; i < 9; i++) {
+      gotoxy(kolom + space, 3 + i);
+      printf("|");
+      gotoxy(space, 11 - i);
+      printf("|");
+      Sleep(30);
+    }
+
+    char login[] = "LOGIN";
+    for (int i = 0; login[i] != '\0'; i++) {
+      gotoxy((kolom + space) / 2 + 12 + i, 1);
+      printf("%c", login[i]);
+      Sleep(30);
+    }
+    char user[9] = "admin", pass[9] = "gold";
+    char inputUsername[9], inputPassword[9];
+
+    gotoxy(space + 4, 5);
+    printf("Masukkan username : ");
+    scanf("%s", &inputUsername);
+    gotoxy(space + 4, 6);
+    printf("Masukkan password : ");
+    password_hash(inputPassword);
+    // cek username and password
+    if (strcmp(user, inputUsername) == 0 && strcmp(pass, inputPassword) == 0) {
+      // printf("Login Berhasil!");
+      // getch();
+      menuCrud();
+      return;
+    } else {
+      gotoxy(space + space + 7, 14);
+      printf("ERROR!\n");
+      gotoxy(space + space + 7, 15);
+      printf("USERNAME DAN PASSWORD SALAH");
+      getch();
+      error++;
+    }
+    if (error >= 3) {
+      gotoxy(space, 17);
+      printf("MAAF ANDA MEMASUKKAN PASSWORD DAN USERNAME SALAH SEBANYAK 3x");
+      getch();
+      exit(0);
+    }
+  }
 }
